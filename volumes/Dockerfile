@@ -1,4 +1,4 @@
-FROM opensuse/leap:15.2
+FROM ubuntu:groovy
 
 VOLUME ["/persistent-data"]
 

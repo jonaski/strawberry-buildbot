@@ -1,13 +1,6 @@
 {
   "linux": {
-    "opensuse": ["lp151", "lp152", "tumbleweed"],
-    "fedora": ["31", "32", "33"],
-    "centos": ["8"],
-    "mageia": ["7"],
-    "ubuntu": ["bionic", "focal", "groovy"],
-    "debian": ["buster", "bullseye"]
+    "ubuntu": ["groovy"]
   },
- "special_workers": [
-    "appimage", "mingw"
-  ]
+ "special_workers": []
 }

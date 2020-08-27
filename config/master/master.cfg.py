@@ -31,7 +31,7 @@ LINUX_FACTORIES = {
 
 CONFIG = json.load(open('/config/config.json'))
 PASSWORDS = json.load(open('/config/secret/passwords.json'))
-GITHUB_AUTH = json.load(open('/config/secret/github-auth.json'))
+#GITHUB_AUTH = json.load(open('/config/secret/github-auth.json'))
 PPA_STABLE = 'ppa:jonaski/strawberry'
 PPA_UNSTABLE = 'ppa:jonaski/strawberry-unstable'
 
@@ -51,7 +51,7 @@ class StrawberryBuildbot(object):
 
     # Add Ubuntu PPA.
     for linux_distro in CONFIG['linux']['ubuntu']:
-      #self._AddBuilder(name='Ubuntu Stable PPA %s' % linux_distro.title(), worker='ubuntu-%s' % linux_distro, build_factory=builders.MakePPABuilder(linux_distro, "stable", PPA_STABLE))
+      self._AddBuilder(name='Ubuntu Stable PPA %s' % linux_distro.title(), worker='ubuntu-%s' % linux_distro, build_factory=builders.MakePPABuilder(linux_distro, "stable", PPA_STABLE))
       self._AddBuilder(name='Ubuntu Unstable PPA %s' % linux_distro.title(), worker='ubuntu-%s' % linux_distro, build_factory=builders.MakePPABuilder(linux_distro, "unstable", PPA_UNSTABLE))
 
     # Add special workers.
@@ -59,19 +59,19 @@ class StrawberryBuildbot(object):
       self._AddWorker(name)
 
     # Source.
-    self._AddBuilder(name='Source', worker='opensuse-lp152', build_factory=builders.MakeSourceBuilder())
+    #self._AddBuilder(name='Source', worker='opensuse-lp152', build_factory=builders.MakeSourceBuilder())
 
     # AppImage.
-    self._AddBuilder(name='AppImage', worker='appimage', build_factory=builders.MakeAppImageBuilder(name=""))
+    #self._AddBuilder(name='AppImage', worker='appimage', build_factory=builders.MakeAppImageBuilder(name=""))
 
     # MXE.
-    self._AddBuilder(name='MXE', worker='mingw', build_factory=builders.MakeMXEBuilder(), auto=False, deps_lock='exclusive')
+    #self._AddBuilder(name='MXE', worker='mingw', build_factory=builders.MakeMXEBuilder(), auto=False, deps_lock='exclusive')
 
     # Windows.
-    self._AddBuilder(name='Windows Release x86', worker='mingw', build_factory=builders.MakeWindowsBuilder(is_debug=False, is_64=False, with_qt6=False), deps_lock='counting')
-    self._AddBuilder(name='Windows Release x64', worker='mingw', build_factory=builders.MakeWindowsBuilder(is_debug=False, is_64=True, with_qt6=False), deps_lock='counting')
-    self._AddBuilder(name='Windows Debug x86', worker='mingw', build_factory=builders.MakeWindowsBuilder(is_debug=True, is_64=False, with_qt6=False), deps_lock='counting')
-    self._AddBuilder(name='Windows Debug x64', worker='mingw', build_factory=builders.MakeWindowsBuilder(is_debug=True, is_64=True, with_qt6=False), deps_lock='counting')
+    #self._AddBuilder(name='Windows Release x86', worker='mingw', build_factory=builders.MakeWindowsBuilder(is_debug=False, is_64=False, with_qt6=False), deps_lock='counting')
+    #self._AddBuilder(name='Windows Release x64', worker='mingw', build_factory=builders.MakeWindowsBuilder(is_debug=False, is_64=True, with_qt6=False), deps_lock='counting')
+    #self._AddBuilder(name='Windows Debug x86', worker='mingw', build_factory=builders.MakeWindowsBuilder(is_debug=True, is_64=False, with_qt6=False), deps_lock='counting')
+    #self._AddBuilder(name='Windows Debug x64', worker='mingw', build_factory=builders.MakeWindowsBuilder(is_debug=True, is_64=True, with_qt6=False), deps_lock='counting')
 
     #self._AddBuilder(name='Windows Release x86 Qt 6', worker='mingw', build_factory=builders.MakeWindowsBuilder(is_debug=False, is_64=False, with_qt6=True), deps_lock='counting')
     #self._AddBuilder(name='Windows Release x64 Qt 6', worker='mingw', build_factory=builders.MakeWindowsBuilder(is_debug=False, is_64=True, with_qt6=True), deps_lock='counting')
@@ -113,7 +113,7 @@ class StrawberryBuildbot(object):
     return {
       'projectName':  "Strawberry",
       'projectURL':   "https://www.strawberrymusicplayer.org/",
-      'buildbotURL':  "https://buildbot.strawberrymusicplayer.org/",
+      'buildbotURL':  "http://localhost:8010/",
       'protocols': {
 	  "pb": {
 	    "port": "tcp:9989:interface=0.0.0.0"
@@ -132,9 +132,11 @@ class StrawberryBuildbot(object):
             roleMatchers=[
                util.RolesFromEmails(admins=["jonas@jkvinge.net"]),
                util.RolesFromOwner(role="owner"),
-                 ]
-            ),
-        'auth': util.GitHubAuth(GITHUB_AUTH["clientid"], GITHUB_AUTH["clientsecret"]),
+               util.RolesFromUsername(roles=["admins"], usernames=["admin"]),
+            ]
+        ),
+        #'auth': util.GitHubAuth(GITHUB_AUTH["clientid"], GITHUB_AUTH["clientsecret"]),
+        'auth': util.UserPasswordAuth({"admin": "doh!"}),
         'plugins': {
           'waterfall_view': True,
           'console_view': True,
@@ -148,14 +150,14 @@ class StrawberryBuildbot(object):
           treeStableTimer=2*60,
           builderNames=self.auto_builder_names,
         ),
-        basic.SingleBranchScheduler(
-          name="mxe",
-          change_filter=filter.ChangeFilter(project="strawberry-mxe", branch="master"),
-          treeStableTimer=2*60,
-          builderNames=[
-            'MXE',
-          ],
-        ),
+        #basic.SingleBranchScheduler(
+        #  name="mxe",
+        #  change_filter=filter.ChangeFilter(project="strawberry-mxe", branch="master"),
+        #  treeStableTimer=2*60,
+        #  builderNames=[
+        #    'MXE',
+        #  ],
+        #),
         forcesched.ForceScheduler(
           name="force",
           builderNames=[x['name'] for x in self.builders],
