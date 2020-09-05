@@ -13,7 +13,7 @@ RUN apt-get install -y \
                     python3-pip python3-dev
 
 RUN pip3 install --upgrade pip
-RUN pip3 install buildbot_worker==2.8.3
+RUN pip3 install buildbot_worker==2.8.4
 
 RUN echo "debian-bullseye" > /worker-name
 RUN useradd -r -m -s /bin/false buildbot

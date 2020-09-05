@@ -296,7 +296,7 @@ def MakePPABuilder(distro, ppa_type, ppa_path):
       name="run dpkg-buildpackage",
       workdir="source",
       command=["dpkg-buildpackage", "-S", "-d", "-k573D197B5EA20EDF"],
-      haltOnFailure=False,
+      haltOnFailure=True,
     )
   )
 
@@ -304,7 +304,7 @@ def MakePPABuilder(distro, ppa_type, ppa_path):
     shell.ShellCommand(
       name="dput",
       workdir=".",
-      command="dput %s *_source.changes" % ppa_path,
+      command=["/config/dist/upload-ppa.sh", ppa_type, ppa_path],
       haltOnFailure=True
     )
   )

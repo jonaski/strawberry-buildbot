@@ -16,7 +16,7 @@ RUN zypper --non-interactive --gpg-auto-import-keys install \
     python3-base python3-devel python3-pip
 
 RUN pip3 install --upgrade pip
-RUN pip3 install buildbot_worker==2.8.3
+RUN pip3 install buildbot_worker==2.8.4
 
 RUN echo "opensuse-lp152" > /worker-name
 RUN useradd -r -m -s /bin/false buildbot

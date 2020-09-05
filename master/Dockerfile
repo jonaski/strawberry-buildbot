@@ -7,7 +7,7 @@ RUN apt-get -y upgrade
 RUN apt-get install -y pkg-config python3-pip python3-dev python3-cairo-dev
 
 RUN pip3 install --upgrade pip
-RUN pip3 install pycairo requests buildbot==2.8.3 buildbot-www==2.8.3 buildbot-waterfall-view==2.8.3 buildbot-console-view==2.8.3 buildbot-grid-view==2.8.3 buildbot-badges sqlalchemy
+RUN pip3 install pycairo requests buildbot==2.8.4 buildbot-www==2.8.4 buildbot-waterfall-view==2.8.4 buildbot-console-view==2.8.4 buildbot-grid-view==2.8.4 buildbot-badges sqlalchemy
 
 RUN ln -s /usr/local/bin/buildbot /usr/bin/buildbot
 
