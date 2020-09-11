@@ -534,59 +534,64 @@ def MakeAppImageBuilder(name):
     )
   )
 
-  gstreamer_plugins_files = [
-    '/usr/lib64/gstreamer-1.0/libgstapp.so',
-    '/usr/lib64/gstreamer-1.0/libgstcoreelements.so',
-    '/usr/lib64/gstreamer-1.0/libgstaudioconvert.so',
-    '/usr/lib64/gstreamer-1.0/libgstaudiofx.so',
-    '/usr/lib64/gstreamer-1.0/libgstaudiomixer.so',
-    '/usr/lib64/gstreamer-1.0/libgstaudioparsers.so',
-    '/usr/lib64/gstreamer-1.0/libgstaudiorate.so',
-    '/usr/lib64/gstreamer-1.0/libgstaudioresample.so',
-    '/usr/lib64/gstreamer-1.0/libgstaudiotestsrc.so',
-    '/usr/lib64/gstreamer-1.0/libgstaudiovisualizers.so',
-    '/usr/lib64/gstreamer-1.0/libgstautodetect.so',
-    '/usr/lib64/gstreamer-1.0/libgstautoconvert.so',
-    '/usr/lib64/gstreamer-1.0/libgstplayback.so',
-    '/usr/lib64/gstreamer-1.0/libgstvolume.so',
-    '/usr/lib64/gstreamer-1.0/libgstspectrum.so',
-    '/usr/lib64/gstreamer-1.0/libgstequalizer.so',
-    '/usr/lib64/gstreamer-1.0/libgstlevel.so',
-    '/usr/lib64/gstreamer-1.0/libgstreplaygain.so',
-    '/usr/lib64/gstreamer-1.0/libgsttypefindfunctions.so',
-    '/usr/lib64/gstreamer-1.0/libgstgio.so',
-    '/usr/lib64/gstreamer-1.0/libgstalsa.so',
-    '/usr/lib64/gstreamer-1.0/libgstoss4.so',
-    '/usr/lib64/gstreamer-1.0/libgstossaudio.so',
-    '/usr/lib64/gstreamer-1.0/libgstpulseaudio.so',
-    '/usr/lib64/gstreamer-1.0/libgstapetag.so',
-    '/usr/lib64/gstreamer-1.0/libgsticydemux.so',
-    '/usr/lib64/gstreamer-1.0/libgstid3demux.so',
-    '/usr/lib64/gstreamer-1.0/libgstxingmux.so',
-    '/usr/lib64/gstreamer-1.0/libgsttcp.so',
-    '/usr/lib64/gstreamer-1.0/libgstudp.so',
-    '/usr/lib64/gstreamer-1.0/libgstsoup.so',
-    '/usr/lib64/gstreamer-1.0/libgstcdio.so',
+  gstreamer_plugins_path = "/usr/lib64/gstreamer-1.0/"
+  gstreamer_plugins_filelist = [
+    'libgstapp.so',
+    'libgstcoreelements.so',
+    'libgstaudioconvert.so',
+    'libgstaudiofx.so',
+    'libgstaudiomixer.so',
+    'libgstaudioparsers.so',
+    'libgstaudiorate.so',
+    'libgstaudioresample.so',
+    'libgstaudiotestsrc.so',
+    'libgstaudiovisualizers.so',
+    'libgstautodetect.so',
+    'libgstautoconvert.so',
+    'libgstplayback.so',
+    'libgstvolume.so',
+    'libgstspectrum.so',
+    'libgstequalizer.so',
+    'libgstlevel.so',
+    'libgstreplaygain.so',
+    'libgsttypefindfunctions.so',
+    'libgstgio.so',
+    'libgstalsa.so',
+    'libgstoss4.so',
+    'libgstossaudio.so',
+    'libgstpulseaudio.so',
+    'libgstapetag.so',
+    'libgsticydemux.so',
+    'libgstid3demux.so',
+    'libgstxingmux.so',
+    'libgsttcp.so',
+    'libgstudp.so',
+    'libgstsoup.so',
+    'libgstcdio.so',
 
-    '/usr/lib64/gstreamer-1.0/libgstflac.so',
-    '/usr/lib64/gstreamer-1.0/libgstwavparse.so',
-    '/usr/lib64/gstreamer-1.0/libgstwavpack.so',
-    '/usr/lib64/gstreamer-1.0/libgstogg.so',
-    '/usr/lib64/gstreamer-1.0/libgstvorbis.so',
-    '/usr/lib64/gstreamer-1.0/libgstopus.so',
-    '/usr/lib64/gstreamer-1.0/libgstopusparse.so',
-    '/usr/lib64/gstreamer-1.0/libgstspeex.so',
-    '/usr/lib64/gstreamer-1.0/libgstlame.so',
-    '/usr/lib64/gstreamer-1.0/libgstaiff.so',
-    '/usr/lib64/gstreamer-1.0/libgstasfmux.so',
-    '/usr/lib64/gstreamer-1.0/libgstisomp4.so',
-    '/usr/lib64/gstreamer-1.0/libgstlibav.so',
-    '/usr/lib64/gstreamer-1.0/libgstfaad.so',
-    '/usr/lib64/gstreamer-1.0/libgstasf.so',
-    '/usr/lib64/gstreamer-1.0/libgstrealmedia.so',
+    'libgstflac.so',
+    'libgstwavparse.so',
+    'libgstwavpack.so',
+    'libgstogg.so',
+    'libgstvorbis.so',
+    'libgstopus.so',
+    'libgstopusparse.so',
+    'libgstspeex.so',
+    'libgstlame.so',
+    'libgstaiff.so',
+    'libgstasfmux.so',
+    'libgstisomp4.so',
+    'libgstlibav.so',
+    'libgstfaad.so',
+    'libgstasf.so',
+    'libgstrealmedia.so',
 
-    #'/usr/lib64/gstreamer-1.0/libgstmusepack.so',
+    #'libgstmusepack.so',
   ]
+
+  gstreamer_plugins_files = []
+  for i in gstreamer_plugins_filelist:
+    gstreamer_plugins_files.append(gstreamer_plugins_path + "/" + i)
 
   #f.addStep(
   #  shell.ShellCommand(
@@ -703,23 +708,15 @@ def MakeMXEBuilder():
 
 def MakeWindowsBuilder(is_debug, is_64, with_qt6):
 
-  env_lang = {
-    "RC_LANG": "en_US.UTF-8",
-    "RC_LC_ALL": "en_US.UTF-8",
-    "RC_LC_CTYPE": "en_US.UTF-8",
-    "RC_LC_TIME": "nb_NO.UTF-8",
-    "RC_LC_NUMERIC": "nb_NO.UTF-8",
-    "RC_LC_MONETARY": "nb_NO.UTF-8",
-    "RC_LC_PAPER": "nb_NO.UTF-8",
-  }
-
   mingw32_name = ("x86_64-w64-mingw32.shared" if is_64 else "i686-w64-mingw32.shared")
   qt_dir = ("qt6" if with_qt6 else "qt5")
+  mxe_path = "/persistent-data/mingw/mxe/source"
+  target_path = mxe_path + "/usr/" + mingw32_name
 
   env = {
-    "PKG_CONFIG_LIBDIR": "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/lib/pkgconfig",
+    "PKG_CONFIG_LIBDIR": target_path + "/lib/pkgconfig",
     "PATH": ":".join([
-      "/persistent-data/mingw/mxe/source/usr/x86_64-pc-linux-gnu/bin",
+      mxe_path + "/usr/x86_64-pc-linux-gnu/bin",
       "/usr/local/bin",
       "/usr/bin",
       "/bin",
@@ -741,12 +738,17 @@ def MakeWindowsBuilder(is_debug, is_64, with_qt6):
     "-DWITH_QT6=" + ("ON" if with_qt6 else "OFF"),
   ]
 
-  executable_files = [
-    "strawberry.exe",
-    "strawberry-tagreader.exe",
-  ]
+  strip_cmd = mxe_path + "/usr/bin/" + mingw32_name + "-strip"
 
-  strip_command = "/persistent-data/mingw/mxe/source/usr/bin/" + mingw32_name + "-strip"
+  extra_binary_fileslist = [
+    "liborc-0.4-0.dll",
+    "sqlite3.exe",
+    "killproc.exe"
+  ]
+  extra_binary_files = []
+  for i in extra_binary_fileslist:
+    extra_binary_files.append(target_path + "/bin/" + i)
+
   nsi_filename = "strawberry.nsi"
 
   nsi_files = [
@@ -756,61 +758,68 @@ def MakeWindowsBuilder(is_debug, is_64, with_qt6):
     "strawberry.ico",
   ]
 
-  imageformats_files = [
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/" + qt_dir + "/plugins/imageformats/qgif.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/" + qt_dir + "/plugins/imageformats/qjpeg.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/" + qt_dir+ "/plugins/imageformats/qico.dll",
+  imageformats_filelist = [
+    "qgif.dll",
+    "qjpeg.dll",
+    "qico.dll",
   ]
-  gstreamer_plugins_files = [
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstapp.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstcoreelements.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstaudioconvert.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstaudiofx.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstaudiomixer.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstaudioparsers.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstaudiorate.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstaudioresample.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstaudiotestsrc.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstautodetect.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstplayback.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstvolume.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstspectrum.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstequalizer.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstreplaygain.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgsttypefindfunctions.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstgio.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstdirectsound.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstwasapi.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstpbtypes.dll",
+  imageformats_files = []
+  for i in imageformats_filelist:
+    imageformats_files.append(target_path + "/" + qt_dir + "/plugins/imageformats/" + i)
 
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstapetag.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgsticydemux.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstid3demux.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgsttaglib.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgsttcp.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstudp.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstsoup.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstcdio.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstrtp.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstrtsp.dll",
-
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstflac.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstwavparse.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstwavpack.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstogg.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstvorbis.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstopus.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstopusparse.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstspeex.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstlame.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstaiff.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstfaac.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstfaad.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstisomp4.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstasf.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstasfmux.dll",
-    "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/gstreamer-1.0/libgstlibav.dll",
+  gstreamer_plugins_path = target_path + "/bin/gstreamer-1.0/"
+  gstreamer_plugins_filelist = [
+    "libgstapp.dll",
+    "libgstcoreelements.dll",
+    "libgstaudioconvert.dll",
+    "libgstaudiofx.dll",
+    "libgstaudiomixer.dll",
+    "libgstaudioparsers.dll",
+    "libgstaudiorate.dll",
+    "libgstaudioresample.dll",
+    "libgstaudiotestsrc.dll",
+    "libgstautodetect.dll",
+    "libgstplayback.dll",
+    "libgstvolume.dll",
+    "libgstspectrum.dll",
+    "libgstequalizer.dll",
+    "libgstreplaygain.dll",
+    "libgsttypefindfunctions.dll",
+    "libgstgio.dll",
+    "libgstdirectsound.dll",
+    "libgstwasapi.dll",
+    "libgstpbtypes.dll",
+    "libgstapetag.dll",
+    "libgsticydemux.dll",
+    "libgstid3demux.dll",
+    "libgsttaglib.dll",
+    "libgsttcp.dll",
+    "libgstudp.dll",
+    "libgstsoup.dll",
+    "libgstcdio.dll",
+    "libgstrtp.dll",
+    "libgstrtsp.dll",
+    "libgstflac.dll",
+    "libgstwavparse.dll",
+    "libgstwavpack.dll",
+    "libgstogg.dll",
+    "libgstvorbis.dll",
+    "libgstopus.dll",
+    "libgstopusparse.dll",
+    "libgstspeex.dll",
+    "libgstlame.dll",
+    "libgstaiff.dll",
+    "libgstfaac.dll",
+    "libgstfaad.dll",
+    "libgstisomp4.dll",
+    "libgstasf.dll",
+    "libgstasfmux.dll",
+    "libgstlibav.dll",
   ]
+
+  gstreamer_plugins_files = []
+  for i in gstreamer_plugins_filelist:
+    gstreamer_plugins_files.append(gstreamer_plugins_path + "/" + i)
 
   f = factory.BuildFactory()
   f.addStep(git.Git(**GitArgs("strawberry", "master")))
@@ -827,16 +836,8 @@ def MakeWindowsBuilder(is_debug, is_64, with_qt6):
   f.addStep(
     shell.Compile(
       name="compile",
-      command=["make", "-j", MAKE_JOBS],
+      command=[ "make", "-j", MAKE_JOBS ],
       workdir="source/build",
-      haltOnFailure=True
-    )
-  )
-  f.addStep(
-    shell.ShellCommand(
-      name="run strip",
-      workdir="source/build",
-      command=[strip_command] + executable_files,
       haltOnFailure=True
     )
   )
@@ -864,11 +865,7 @@ def MakeWindowsBuilder(is_debug, is_64, with_qt6):
     shell.ShellCommand(
       name="copy libgiognutls.dll",
       workdir="source/build/gio-modules",
-      command=[
-        "cp",
-        "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/lib/gio/modules/libgiognutls.dll",
-        ".",
-      ],
+      command=[ "cp", target_path + "/lib/gio/modules/libgiognutls.dll", "." ],
       haltOnFailure=True
     )
   )
@@ -877,11 +874,7 @@ def MakeWindowsBuilder(is_debug, is_64, with_qt6):
     shell.ShellCommand(
       name="copy qwindows.dll",
       workdir="source/build/platforms",
-      command=[
-        "cp",
-        "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/" + qt_dir + "/plugins/platforms/qwindows.dll",
-        ".",
-      ],
+      command=[ "cp", target_path + "/" + qt_dir + "/plugins/platforms/qwindows.dll", "." ],
       haltOnFailure=True
     )
   )
@@ -890,37 +883,25 @@ def MakeWindowsBuilder(is_debug, is_64, with_qt6):
     shell.ShellCommand(
       name="copy qsqlite.dll",
       workdir="source/build/sqldrivers",
-      command=[
-        "cp",
-        "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/" + qt_dir + "/plugins/sqldrivers/qsqlite.dll",
-        ".",
-      ],
+      command=[ "cp", target_path + "/" + qt_dir + "/plugins/sqldrivers/qsqlite.dll", ".", ],
       haltOnFailure=True
     )
   )
 
   f.addStep(
     shell.ShellCommand(
-      name="copy imageformats",
+      name="copy qt imageformats",
       workdir="source/build/imageformats",
-      command=[
-        "cp",
-        imageformats_files,
-        ".",
-      ],
+      command=[ "cp", imageformats_files, "." ],
       haltOnFailure=True
     )
   )
 
   f.addStep(
     shell.ShellCommand(
-      name="copy styles",
+      name="copy qt styles",
       workdir="source/build/styles",
-      command=[
-        "cp",
-        "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/" + qt_dir + "/plugins/styles/qwindowsvistastyle.dll",
-        ".",
-      ],
+      command=[ "cp", target_path + "/" + qt_dir + "/plugins/styles/qwindowsvistastyle.dll", "." ],
       haltOnFailure=True
     )
   )
@@ -929,24 +910,16 @@ def MakeWindowsBuilder(is_debug, is_64, with_qt6):
     shell.ShellCommand(
       name="copy gstreamer-plugins",
       workdir="source/build/gstreamer-plugins",
-      command=[
-        "cp",
-        gstreamer_plugins_files,
-        ".",
-      ],
+      command=[ "cp", gstreamer_plugins_files, "." ],
       haltOnFailure=True
     )
   )
 
   f.addStep(
     shell.ShellCommand(
-      name="copy liborc",
+      name="copy extra binaries",
       workdir="source/build",
-      command=[
-        "cp",
-        "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/liborc-0.4-0.dll",
-        ".",
-      ],
+      command=[ "cp", extra_binary_files, "." ],
       haltOnFailure=True
     )
   )
@@ -956,7 +929,7 @@ def MakeWindowsBuilder(is_debug, is_64, with_qt6):
       name="copydlldeps.sh",
       workdir="source/build",
       command=[
-        "/persistent-data/mingw/mxe/source/tools/copydlldeps.sh",
+        mxe_path + "/tools/copydlldeps.sh",
         "-c",
         "-d",
         ".",
@@ -973,13 +946,23 @@ def MakeWindowsBuilder(is_debug, is_64, with_qt6):
         "-F",
         "./gstreamer-plugins",
         "-X",
-        "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/apps",
+        target_path + "/apps",
         "-R",
-        "/persistent-data/mingw/mxe/source/usr/" + mingw32_name,
+        target_path,
       ],
       haltOnFailure=True
     )
   )
+
+  if not is_debug:
+    f.addStep(
+      shell.ShellCommand(
+        name="run strip",
+        workdir="source/build",
+        command=[ "/config/dist/win-strip.sh", strip_cmd ],
+        haltOnFailure=True
+      )
+    )
 
   f.addStep(
     shell.ShellCommand(
@@ -992,19 +975,9 @@ def MakeWindowsBuilder(is_debug, is_64, with_qt6):
 
   f.addStep(
     shell.ShellCommand(
-      name="copy killproc.exe",
-      workdir="source/build",
-      command=["cp", "/persistent-data/mingw/mxe/source/usr/" + mingw32_name + "/bin/killproc.exe", "." ],
-      haltOnFailure=True
-    )
-  )
-
-  f.addStep(
-    shell.ShellCommand(
       name="run makensis",
-      command=["makensis", nsi_filename],
+      command=[ "makensis", nsi_filename ],
       workdir="source/build",
-      env=env_lang,
       haltOnFailure=True
     )
   )
@@ -1013,11 +986,7 @@ def MakeWindowsBuilder(is_debug, is_64, with_qt6):
     steps.SetPropertyFromCommand(
       name="get output filename",
       workdir="source",
-      command=[
-        "sh",
-        "-c",
-        "ls -dt " + "build/StrawberrySetup-*.exe" + " | head -n 1"
-      ],
+      command=[ "sh", "-c", "ls -dt " + "build/StrawberrySetup-*.exe" + " | head -n 1" ],
       property="output-filepath",
       haltOnFailure=True
     )
