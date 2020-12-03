@@ -413,11 +413,13 @@ def MakeAppImageBuilder(name):
     )
   )
 
+  cmake_qt_flag = "-DBUILD_WITH_QT6=ON" if name == "Qt6" else "-DBUILD_WITH_QT5=ON"
+
   f.addStep(
     shell.ShellCommand(
       name="run cmake",
       workdir="source/build",
-      command=["cmake", "..", "-DUSE_BUNDLE=ON", "-DCMAKE_INSTALL_PREFIX=/usr"],
+      command=["cmake", "..", "-DCMAKE_INSTALL_PREFIX=/usr", cmake_qt_flag],
       haltOnFailure=True
     )
   )
@@ -431,8 +433,8 @@ def MakeAppImageBuilder(name):
       haltOnFailure=True
     )
   )
-  env_output = {
-    "OUTPUT": util.Interpolate("Strawberry%(kw:name)s-%(prop:output-version)s.AppImage", name=name)
+  env_version = {
+    "VERSION": util.Interpolate("%(prop:output-version)s-%(kw:name)s", name=name)
   }
 
   f.addStep(
@@ -454,199 +456,65 @@ def MakeAppImageBuilder(name):
 
   f.addStep(
     shell.ShellCommand(
-      name="remove appdata",
+      name="rename strawberry-tagreader",
+      workdir="source/build",
+      command=["mv", "AppDir/usr/bin/strawberry-tagreader", "./AppDir/usr/bin/strawberry-tagreader-bin"],
+      haltOnFailure=True
+    )
+  )
+
+  f.addStep(
+    shell.ShellCommand(
+      name="copy strawberry-tagreader.sh",
+      workdir="source/build",
+      command=["cp", "/config/dist/strawberry-tagreader.sh", "./AppDir/usr/bin/strawberry-tagreader"],
+      haltOnFailure=True
+    )
+  )
+
+  f.addStep(
+    shell.ShellCommand(
+      name="cp appdata",
       workdir="source/build",
       haltOnFailure=True,
-      command=["rm", "./AppDir/usr/share/metainfo/org.strawberrymusicplayer.strawberry.appdata.xml"]
+      command=["cp", "./AppDir/usr/share/metainfo/org.strawberrymusicplayer.strawberry.appdata.xml", "./AppDir/"]
     )
   )
 
   f.addStep(
     shell.ShellCommand(
-      name="curl linuxdeploy-x86_64.AppImage",
+      name="cp icon",
       workdir="source/build",
-      command=["curl", "-O", "-L", "https://artifacts.assassinate-you.net/artifactory/list/linuxdeploy/travis-456/linuxdeploy-x86_64.AppImage"],
+      haltOnFailure=True,
+      command=["cp", "./AppDir/usr/share/icons/hicolor/128x128/apps/strawberry.png", "./AppDir/"]
+    )
+  )
+
+  f.addStep(
+    shell.ShellCommand(
+      name="run appimagetool deploy",
+      workdir="source/build",
+      command=["appimagetool", "-s", "deploy", "AppDir/usr/share/applications/org.strawberrymusicplayer.strawberry.desktop"],
+      env=env_version,
       haltOnFailure=True
     )
   )
 
   f.addStep(
     shell.ShellCommand(
-      name="curl linuxdeploy-plugin-appimage-x86_64.AppImage",
+      name="copy gst-plugin-scanner.sh",
       workdir="source/build",
-      command=["curl", "-O", "-L", "https://github.com/linuxdeploy/linuxdeploy-plugin-appimage/releases/download/continuous/linuxdeploy-plugin-appimage-x86_64.AppImage"],
+      command=["cp", "/config/dist/gst-plugin-scanner.sh", "./AppDir/usr/libexec/gstreamer-1.0/"],
       haltOnFailure=True
     )
   )
 
   f.addStep(
     shell.ShellCommand(
-      name="curl linuxdeploy-plugin-qt-x86_64.AppImage",
+      name="run appimagetool",
       workdir="source/build",
-      command=["curl", "-O", "-L", "https://github.com/linuxdeploy/linuxdeploy-plugin-qt/releases/download/continuous/linuxdeploy-plugin-qt-x86_64.AppImage"],
-      haltOnFailure=True
-    )
-  )
-
-  f.addStep(
-    shell.ShellCommand(
-      name="run chmod",
-      workdir="source/build",
-      command="chmod +x linuxdeploy*.AppImage",
-      haltOnFailure=True
-    )
-  )
-
-  f.addStep(
-    shell.ShellCommand(
-      name="run linuxdeploy --appimage-extract",
-      workdir="source/build",
-      command=["./linuxdeploy-x86_64.AppImage", "--appimage-extract"],
-      haltOnFailure=True
-    )
-  )
-
-  f.addStep(
-    shell.ShellCommand(
-      name="run linuxdeploy-plugin-appimage --appimage-extract",
-      workdir="source/build",
-      command=["./linuxdeploy-plugin-appimage-x86_64.AppImage", "--appimage-extract"],
-      haltOnFailure=True
-    )
-  )
-
-  f.addStep(
-    shell.ShellCommand(
-      name="run linuxdeploy-plugin-qt-x86_64.AppImage --appimage-extract",
-      workdir="source/build",
-      command=["./linuxdeploy-plugin-qt-x86_64.AppImage", "--appimage-extract"],
-      haltOnFailure=True
-    )
-  )
-
-  f.addStep(
-    shell.ShellCommand(
-      name="run linuxdeploy",
-      workdir="source/build",
-      command=["./squashfs-root/usr/bin/linuxdeploy", "--appdir", "AppDir", "-e", "strawberry", "--plugin", "qt"],
-      env=env_output,
-      haltOnFailure=True
-    )
-  )
-
-  gstreamer_plugins_path = "/usr/lib64/gstreamer-1.0/"
-  gstreamer_plugins_filelist = [
-    'libgstapp.so',
-    'libgstcoreelements.so',
-    'libgstaudioconvert.so',
-    'libgstaudiofx.so',
-    'libgstaudiomixer.so',
-    'libgstaudioparsers.so',
-    'libgstaudiorate.so',
-    'libgstaudioresample.so',
-    'libgstaudiotestsrc.so',
-    'libgstaudiovisualizers.so',
-    'libgstautodetect.so',
-    'libgstautoconvert.so',
-    'libgstplayback.so',
-    'libgstvolume.so',
-    'libgstspectrum.so',
-    'libgstequalizer.so',
-    'libgstlevel.so',
-    'libgstreplaygain.so',
-    'libgsttypefindfunctions.so',
-    'libgstgio.so',
-    'libgstalsa.so',
-    'libgstoss4.so',
-    'libgstossaudio.so',
-    'libgstpulseaudio.so',
-    'libgstapetag.so',
-    'libgsticydemux.so',
-    'libgstid3demux.so',
-    'libgstxingmux.so',
-    'libgsttcp.so',
-    'libgstudp.so',
-    'libgstsoup.so',
-    'libgstcdio.so',
-
-    'libgstflac.so',
-    'libgstwavparse.so',
-    'libgstwavpack.so',
-    'libgstogg.so',
-    'libgstvorbis.so',
-    'libgstopus.so',
-    'libgstopusparse.so',
-    'libgstspeex.so',
-    'libgstlame.so',
-    'libgstaiff.so',
-    'libgstasfmux.so',
-    'libgstisomp4.so',
-    'libgstlibav.so',
-    'libgstfaad.so',
-    'libgstasf.so',
-    'libgstrealmedia.so',
-
-    #'libgstmusepack.so',
-  ]
-
-  gstreamer_plugins_files = []
-  for i in gstreamer_plugins_filelist:
-    gstreamer_plugins_files.append(gstreamer_plugins_path + "/" + i)
-
-  #f.addStep(
-  #  shell.ShellCommand(
-  #    name="mkdir gstreamer",
-  #    workdir="source/build",
-  #    command=[ "mkdir", "-p", "./AppDir/usr/plugins/gstreamer" ],
-  #    haltOnFailure=True
-  #  )
-  #)
-
-  # Bundling plugins in ./AppDir/usr/plugins/gstreamer doesn't work so just link the directory to the lib dir.
-
-  f.addStep(
-    shell.ShellCommand(
-      name="link gstreamer plugins",
-      workdir="source/build/AppDir/usr/plugins",
-      command=[ "ln", "-s", "../lib/", "gstreamer" ],
-      haltOnFailure=True
-    )
-  )
-
-  f.addStep(
-    shell.ShellCommand(
-      name="list gstreamer plugins",
-      workdir="source/build",
-      command=[ "ls", "-la", "/usr/lib64/gstreamer-1.0/" ],
-      haltOnFailure=True
-    )
-  )
-
-  f.addStep(
-    shell.ShellCommand(
-      name="copy gstreamer plugins",
-      workdir="source/build",
-      command=[ "cp", "-f", gstreamer_plugins_files, "./AppDir/usr/plugins/gstreamer/" ],
-      haltOnFailure=True
-    )
-  )
-
-  f.addStep(
-    shell.ShellCommand(
-      name="copy gstreamer plugin scanner",
-      workdir="source/build",
-      command=["cp", "-r", "-f", "/usr/libexec/gstreamer-1.0/gst-plugin-scanner", "./AppDir/usr/plugins/"],
-      env=env_output,
-      haltOnFailure=True
-    )
-  )
-
-  f.addStep(
-    shell.ShellCommand(
-      name="run linuxdeploy output appimage",
-      workdir="source/build",
-      command=["./squashfs-root/usr/bin/linuxdeploy", "--appdir", "AppDir", "-e", "strawberry", "--plugin", "qt", "--output", "appimage"],
-      env=env_output,
+      command=["appimagetool", "AppDir"],
+      env=env_version,
       haltOnFailure=True
     )
   )
@@ -730,12 +598,11 @@ def MakeWindowsBuilder(is_debug, is_64, with_qt6):
     "-DCMAKE_BUILD_TYPE=" + ("Debug" if is_debug else "Release"),
     "-DARCH=" + ("x86_64" if is_64 else "x86"),
     "-DENABLE_WIN32_CONSOLE=" + ("ON" if is_debug else "OFF"),
+    "-DBUILD_WITH_QT6=" + ("ON" if with_qt6 else "OFF"),
+    "-DUSE_SYSTEM_TAGLIB=OFF",
     "-DENABLE_DBUS=OFF",
     "-DENABLE_LIBGPOD=OFF",
-    "-DENABLE_IMOBILEDEVICE=OFF",
     "-DENABLE_LIBMTP=OFF",
-    "-DUSE_SYSTEM_TAGLIB=OFF",
-    "-DWITH_QT6=" + ("ON" if with_qt6 else "OFF"),
   ]
 
   strip_cmd = mxe_path + "/usr/bin/" + mingw32_name + "-strip"
@@ -743,13 +610,13 @@ def MakeWindowsBuilder(is_debug, is_64, with_qt6):
   extra_binary_fileslist = [
     "liborc-0.4-0.dll",
     "sqlite3.exe",
-    "killproc.exe"
+    "killproc.exe",
+    "gdb.exe",
+    "gst-launch-1.0.exe",
   ]
   extra_binary_files = []
   for i in extra_binary_fileslist:
     extra_binary_files.append(target_path + "/bin/" + i)
-
-  nsi_filename = "strawberry.nsi"
 
   nsi_files = [
     "strawberry.nsi",
@@ -976,7 +843,7 @@ def MakeWindowsBuilder(is_debug, is_64, with_qt6):
   f.addStep(
     shell.ShellCommand(
       name="run makensis",
-      command=[ "makensis", nsi_filename ],
+      command=[ "makensis", "strawberry.nsi" ],
       workdir="source/build",
       haltOnFailure=True
     )
@@ -984,7 +851,7 @@ def MakeWindowsBuilder(is_debug, is_64, with_qt6):
 
   f.addStep(
     steps.SetPropertyFromCommand(
-      name="get output filename",
+      name="get output filename 1",
       workdir="source",
       command=[ "sh", "-c", "ls -dt " + "build/StrawberrySetup-*.exe" + " | head -n 1" ],
       property="output-filepath",

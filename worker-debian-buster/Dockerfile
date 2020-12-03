@@ -3,7 +3,7 @@ FROM debian:buster
 RUN apt-get -y update
 RUN apt-get -y upgrade
 RUN apt-get install -y \
-                    git make cmake gcc fakeroot gettext lsb-release dput \
+                    git make cmake gcc fakeroot gettext lsb-release dput build-essential dh-make \
                     libboost-dev libglib2.0-dev dpkg-dev libdbus-1-dev libprotobuf-dev protobuf-compiler libsqlite3-dev libgnutls28-dev \
                     libasound2-dev libpulse-dev \
                     qtbase5-dev qtbase5-dev-tools qttools5-dev libqt5x11extras5-dev \
